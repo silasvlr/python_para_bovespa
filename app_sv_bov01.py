@@ -18,6 +18,11 @@ Valores Mobiliários (CVM). A rentabilidade passada não é garantia de resultad
 
 st.warning(mensagem)
 
+data_atualizacao = datetime.today().strftime('%d/%m/%Y')  # Data atual formatada
+
+# Exibir a data no topo da página
+st.markdown(f"### Dados de preços atualizados em: {data_atualizacao}")
+
 def definir_cor(variacao):
     if variacao < 0:
         return "red"  # Vermelho para valores abaixo de 0
