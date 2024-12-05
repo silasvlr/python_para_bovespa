@@ -133,6 +133,15 @@ def main():
                 st.plotly_chart(fig_variacao)
     else:
         st.warning("Nenhuma ação encontrada para o setor selecionado.")
+        
+    st.markdown("---")
+    st.markdown(
+        """
+        **Desenvolvido por [SILAS VALÉRIO](https://github.com/silasvlr).**  
+        Contato: silas.vlr@gmail.com.
+        """
+    )
+
 
 if __name__ == "__main__":
     main()
