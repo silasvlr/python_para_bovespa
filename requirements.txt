@@ -1,0 +1,6 @@
+streamlit
+plotly
+yfinance
+pandas
+numpy
+git+https://github.com/mv/fundamentus-api
