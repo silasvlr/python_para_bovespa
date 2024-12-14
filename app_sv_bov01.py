@@ -7,14 +7,19 @@ from datetime import datetime, timedelta
 
 # Mensagem de alerta
 mensagem='''Alerta!
-As informações apresentadas  neste  informativo  têm caráter exclusivamente educacional
-e visam promover o aprendizado sobre o mercado financeiro. Este conteúdo  não constitui
-recomendação de investimento, oferta  ou solicitação  para compra ou venda de quaisquer
-ativos financeiros. Reforçamos que as decisões de  investimento são de responsabilidade
-exclusiva do investidor e devem ser  tomadas  com  base em sua análise individual e, se
-necessário, com o auxílio de  um profissional  devidamente  registrado  na  Comissão de
-Valores Mobiliários (CVM). A rentabilidade passada não é garantia de resultados futuros.'''
+As informações apresentadas  neste  informativo  têm caráter exclusivamente educacional. 
+As decisões de  investimento são de  responsabilidade exclusiva  do investidor  e devem 
+ser  tomadas  com  base em  sua  análise individual.  A  rentabilidade  passada  não  é 
+garantia de resultados futuros.'''
 
+# Título principal
+
+st.markdown("<h2 style='text-align: center; font-size: 17px;'>Brazilian Stocks Analysis - Interactive Dashboard</h2>",
+        unsafe_allow_html=True
+    )
+st.markdown("<h2 style='text-align: center; font-size: 13px;'>Brazilian Stocks Analysis - Interactive Dashboard</h2>",
+        unsafe_allow_html=True
+    )
 
 st.warning(mensagem)
 
@@ -52,9 +57,9 @@ def obter_dados_historicos(ticker):
         data_fim = datetime.today()
         data_inicio = data_fim - timedelta(days=365)
         dados = yf.download(ticker, start=data_inicio.strftime("%Y-%m-%d"), end=data_fim.strftime("%Y-%m-%d"))
-        dados['Fechamento'] = round(dados['Close'], 2)
-        dados['Média 20 dias'] = round(dados['Fechamento'].rolling(window=20).mean(), 2)
-        dados['Média 50 dias'] = round(dados['Fechamento'].rolling(window=50).mean(), 2)
+        dados['Fechamento (R$)'] = round(dados['Close'], 2)
+        dados['Média 20 dias (R$)'] = round(dados['Fechamento'].rolling(window=20).mean(), 2)
+        dados['Média 50 dias (R$)'] = round(dados['Fechamento'].rolling(window=50).mean(), 2)
         return dados
     except Exception as e:
         st.error(f"Erro ao obter dados para {ticker}: {e}")
@@ -67,7 +72,7 @@ def obter_dados_historicos(ticker):
 # Interface do Streamlit
 def main():
     st.markdown(
-        "<h2 style='text-align: center; font-size: 20px;'>Gráfico de Bolhas: Valor Patrimonial vs. Distância do preço máximo % (Tamanho: Dividend Yield)</h2>",
+        "<h2 style='text-align: center; font-size: 13px;'>Gráfico de Bolhas: Valor Patrimonial vs. Distância do preço máximo % (Tamanho: Dividend Yield)</h2>",
         unsafe_allow_html=True
     )
 
