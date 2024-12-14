@@ -39,23 +39,24 @@ O uso da linguagem acelera a análise de dados fundamentalistas, como margem de 
 
 
 ## Filtragem e tratamento de dados - Fundamentus
--O dataframe obtido a partir da biblioteca Fundamentus foi filtrados pelos critérios abaixo, que podem ser utilizados de acordo com o critério próprio:
--**Patrimõnio líquido:**  maior que 0
--**Lucro líquido**: maior que 0
--**Dividend yiedl**: maior que 5% 
--**Retorno sobre patrimônio líquido**: maior que 20%
+-O dataframe obtido a partir da biblioteca Fundamentus foi filtrados pelos critérios abaixo, que podem ser utilizados de acordo com o critério próprio.
+-**Patrimõnio líquido:**  maior que 0.
+-**Lucro líquido**: maior que 0.
+-**Dividend yiedl**: maior que 5%. 
+-**Retorno sobre patrimônio líquido**: maior que 20%.
 
 ## Indicadores e informações adicionadas da Yahoo Finance
-- Foram adicionados os seguintes indicadores ao dataframe obtido a partir da Fundamentus:
-- Variação percentual em 52 semanas: **52WeekChange**
-- Setor de atuação da empresa: **sector**
-- Crescimento do lucro: **earningsGrowth**
-- Lucro por ação: **trailingEps**
+- Foram adicionados os seguintes indicadores ao dataframe obtido a partir da Fundamentus.
+- Variação percentual em 52 semanas: **52WeekChange**.
+- Setor de atuação da empresa: **sector**.
+- Crescimento do lucro: **earningsGrowth**.
+- Lucro por ação: **trailingEps**.
 
-## Dados salvos em planilha
+## Dados salvos em planilha.
 - Devido à dificuldade e a velocidade de obtenção de dados da Yahoo Finance, os dados obtidos foram salvos em em formado 'csv' e disponibilizados em pasta pública no Google Drive.
   Dessa forma, a filtragem dos dados fundamentalistas refletem o momento da geração do arquivo (12/2024) e deve ser repetida periodicamente.
-  O endereço consta no script.
+  
+  - O endereço consta no script do .
 
 
 ## 📋 Requisitos
@@ -74,7 +75,7 @@ Antes de começar, você precisará das seguintes dependências instaladas:
 
 Para instalar, use:
 ```bash
-pip install streamlit plotly yfinance pandas numpy pyngrok
+pip install streamlit plotly yfinance pandas numpy 
 pip install git+https://github.com/mv/fundamentus-api
 
 
