@@ -23,18 +23,6 @@ data_atualizacao = datetime.today().strftime('%d/%m/%Y')  # Data atual formatada
 # Exibir a data no topo da página
 st.markdown(f"### Dados de preços atualizados em: {data_atualizacao}")
 
-def definir_cor(variacao):
-    if variacao < 0:
-        return "red"  # Vermelho para valores abaixo de 0
-    elif 0 <= variacao <= 8:
-        return "white"  # Branco para valores entre 0 e 8
-    elif 10 <= variacao <= 20:
-        return "green"  # Verde para valores entre 10 e 20
-    elif variacao > 20:
-        return "blue"  # Azul para valores acima de 20
-    else:
-        return "gray"  # Cor padrão para valores fora dos intervalos (caso não esperado)
-
 
 # Carregar os dados
 acoes_filtradasgraf = pd.read_csv('https://drive.google.com/uc?id=1SJFgW5PbFbxwGgx-GG6dBq2-pS58IoSH')
@@ -43,7 +31,20 @@ acoes_filtradasgraf['roe'] = (acoes_filtradasgraf['roe'] * 100).round(2)
 acoes_filtradasgraf['variacao52Semanas'] = acoes_filtradasgraf['variacao52Semanas'].fillna(0)
 acoes_filtradasgraf['desvioPadrao']=(acoes_filtradasgraf['desvioPadrao']).round(2)
 acoes_filtradasgraf['variacao52Semanas']=(acoes_filtradasgraf['variacao52Semanas']*100).round(2)
-acoes_filtradasgraf['cor_variacao']=acoes_filtradasgraf['variacao52Semanas'].apply(definir_cor)
+
+#Calcula a diferença percentual entre o preço atual do ativo e a maior cotação em um ano.
+def calcular_distancia_topo(ticker):
+    try:
+        ativo = yf.Ticker(ticker)
+        preco_topo = ativo.fast_info.year_high
+        preco_atual = ativo.fast_info.last_price
+        return round(((preco_atual - preco_topo) / preco_atual) * 100, 2)
+    except Exception as e:
+        st.warning(f"Erro ao calcular distância para o topo de {ticker}: {e}")
+        return None
+#aplicação da função da distância para o maior preço
+acoes_filtradasgraf['distanciaTopo'] = acoes_filtradasgraf['tickeryf'].apply(calcular_distancia_topo)
+
 
 # Função para obter dados históricos
 def obter_dados_historicos(ticker):
@@ -51,9 +52,9 @@ def obter_dados_historicos(ticker):
         data_fim = datetime.today()
         data_inicio = data_fim - timedelta(days=365)
         dados = yf.download(ticker, start=data_inicio.strftime("%Y-%m-%d"), end=data_fim.strftime("%Y-%m-%d"))
-        dados['Variação %'] = ((dados['Close'] / dados['Close'].iloc[0] - 1) * 100).round(2)
-        dados['Média 20 dias'] = dados['Variação %'].rolling(window=20).mean()
-        dados['Média 50 dias'] = dados['Variação %'].rolling(window=50).mean()
+        dados['Fechamento'] = round(dados['Close'], 2)
+        dados['Média 20 dias'] = round(dados['Fechamento'].rolling(window=20).mean(), 2)
+        dados['Média 50 dias'] = round(dados['Fechamento'].rolling(window=50).mean(), 2)
         return dados
     except Exception as e:
         st.error(f"Erro ao obter dados para {ticker}: {e}")
@@ -65,7 +66,10 @@ def obter_dados_historicos(ticker):
 
 # Interface do Streamlit
 def main():
-    st.title("Gráfico de Bolhas: Valor Patrimonial vs. Desvio Padrão Variação % (Tamanho: Dividend Yield)")
+    st.markdown(
+        "<h2 style='text-align: center; font-size: 20px;'>Gráfico de Bolhas: Valor Patrimonial vs. Distância do preço máximo % (Tamanho: Dividend Yield)</h2>",
+        unsafe_allow_html=True
+    )
 
     setor_selecionado = st.selectbox(
         "Selecione o setor:",
@@ -79,32 +83,32 @@ def main():
         fig = px.scatter(
             df_filtrado,
             x='pvp',
-            y='desvioPadrao',
+            y='distanciaTopo',
             size='dy',
             color='variacao52Semanas',
-            color_continuous_scale=[
-                [0, "red"],    # Vermelho para valores baixos
-                [0.2, "white"], # Branco para valores entre 0 e 8
-                [0.6, "green"], # Verde para valores entre 10 e 20
-                [1, "blue"]    # Azul para valores altos
-            ],
+            color_continuous_scale=px.colors.sequential.RdBu, 
+            color_continuous_midpoint=0.0,
             text='tickeryf',
             title=f"Ações do Setor: {setor_selecionado}",
             labels={
                 'pvp': 'Preço sobre Valor Patrimonial',
-                'desvioPadrao': 'Desvio padrão variação % 365 dias',
+                'distanciaTopo': 'Distância para o topo de 365 dias',
                 'dy': 'Dividend Yield (%)',
-                'variacao52Semanas': 'Varição das 52 semanas'
-            },
+                'variacao52Semanas': 'Variação das 52 semanas',
+                'tickeryf':'Ticker'
 
+            }
         )
 
         fig.update_traces(textposition='top center')
+
         fig.update_layout(
             xaxis_title='Preço sobre Valor Patrimonial',
-            yaxis_title='Desvio padrão variação % de 365 dias',
-            template='plotly_dark'
-
+            yaxis_title='Distância para o topo de 365 dias',
+            template='plotly_dark',
+            shapes=[
+                dict(type='line', x0=0, x1=1, y0=0, y1=0, xref='paper', yref='y', line=dict(color='red', dash='dash'))
+            ]
         )
 
         st.plotly_chart(fig)
@@ -120,15 +124,15 @@ def main():
                 fig_variacao = px.line(
                     dados_historicos.reset_index(),
                     x='Date',
-                    y=['Variação %', 'Média 20 dias', 'Média 50 dias'],
-                    title=f"Variação Percentual e Médias Móveis ({ticker_selecionado}) - {acoes_filtradasgraf[acoes_filtradasgraf['tickeryf']==ticker_selecionado]['Empresa'].values[0]}",
-                    labels={'value': 'Percentual (%)', 'Date': 'Data'},
+                    y=['Fechamento', 'Média 20 dias', 'Média 50 dias'],
+                    title=f"Variação Cotação e Médias Móveis ({ticker_selecionado})",
+                    labels={'value': 'Fechamento', 'Date': 'Data', 'variable': 'Indicadores'},
+
                     color_discrete_map={
-                        'Variação %': 'blue',
+                        'Fechamento': 'blue',
                         'Média 20 dias': 'green',
                         'Média 50 dias': 'red'
                     }
-
                 )
                 fig_variacao.update_traces(selector=dict(name='Variação %'), line=dict(width=1))  # Linha de variação mais espessa
                 fig_variacao.update_traces(selector=dict(name='Média 20 dias'), line=dict(width=0.5))  # Linha mais fina
