@@ -17,9 +17,10 @@ O uso da linguagem acelera a análise de dados fundamentalistas, como margem de 
 
 - 📈 **Gráfico de Bolhas**:
   - Eixo X: Preço sobre Valor Patrimonial (P/VP).
-  - Eixo Y: Desvio Padrão da Variação Percentual nos últimos 365 dias.
+  - Eixo Y: Distância percentual para o topo (maior cotação) nos últimos 365 dias.
   - Tamanho da Bolha: Dividend Yield (%).
   - Cor: Baseada na Variação Percentual das 52 Semanas.
+
 - 🔍 **Filtragem por Setor**: O usuário pode filtrar as ações por setor.
 - 📊 **Gráficos de Variação e Médias Móveis**:
   - Exibe o desempenho percentual de uma ação específica.
@@ -35,6 +36,26 @@ O uso da linguagem acelera a análise de dados fundamentalistas, como margem de 
 - - **Yahoo Finance API**: Para coleta de dados financeiros.
 - **Streamlit**: Para criar a interface web interativa.
 - **Plotly**: Para gráficos interativos.
+
+
+## Filtragem e tratamento de dados - Fundamentus
+-O dataframe obtido a partir da biblioteca Fundamentus foi filtrados pelos critérios abaixo, que podem ser utilizados de acordo com o critério próprio:
+-**Patrimõnio líquido:**  maior que 0
+-**Lucro líquido**: maior que 0
+-**Dividend yiedl**: maior que 5% 
+-**Retorno sobre patrimônio líquido**: maior que 20%
+
+## Indicadores e informações adicionadas da Yahoo Finance
+- Foram adicionados os seguintes indicadores ao dataframe obtido a partir da Fundamentus:
+- Variação percentual em 52 semanas: **52WeekChange**
+- Setor de atuação da empresa: **sector**
+- Crescimento do lucro: **earningsGrowth**
+- Lucro por ação: **trailingEps**
+
+## Dados salvos em planilha
+- Devido à dificuldade e a velocidade de obtenção de dados da Yahoo Finance, os dados obtidos foram salvos em em formado 'csv' e disponibilizados em pasta pública no Google Drive.
+  Dessa forma, a filtragem dos dados fundamentalistas refletem o momento da geração do arquivo (12/2024) e deve ser repetida periodicamente.
+  O endereço consta no script.
 
 
 ## 📋 Requisitos
