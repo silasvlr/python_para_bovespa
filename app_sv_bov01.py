@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 mensagem='''Alerta!
 As informações apresentadas  neste  informativo  têm caráter exclusivamente educacional. 
 As decisões de  investimento são de  responsabilidade exclusiva  do investidor  e devem 
-ser  tomadas  com  base em  sua  análise individual.  A  rentabilidade  passada  não  é 
+ser  tomadas com  base em  sua  análise individual.  A  rentabilidade  passada  não  é 
 garantia de resultados futuros.'''
 
 # Título principal
@@ -17,16 +17,16 @@ garantia de resultados futuros.'''
 st.markdown("<h2 style='text-align: center; font-size: 17px;'>Brazilian Stocks Analysis - Interactive Dashboard</h2>",
         unsafe_allow_html=True
     )
-st.markdown("<h2 style='text-align: center; font-size: 13px;'>Brazilian Stocks Analysis - Interactive Dashboard</h2>",
+st.markdown("<h2 style='text-align: center; font-size: 15px;'>Análise da Bovespa - Dashboard Interativo</h2>",
         unsafe_allow_html=True
     )
 
 st.warning(mensagem)
 
-data_atualizacao = datetime.today().strftime('%d/%m/%Y')  # Data atual formatada
 
-# Exibir a data no topo da página
-st.markdown(f"### Dados de preços atualizados em: {data_atualizacao}")
+# informar data de atualização dos preços
+data_atualizacao = datetime.today().strftime('%d/%m/%Y')  # Data atual formatada
+mensagemDataPrecos=f"<h2 style='text-align: center; font-size: 12px;'>Dados de preços atualizados em: {data_atualizacao}</h2>"
 
 
 # Carregar os dados
